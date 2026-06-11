@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>TIMSupport Centre | Empowering Communities</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; transition: background-color 0.3s, color 0.3s; }
+        .hero-gradient { background: linear-gradient(135deg, #0f2b3d 0%, #1b4f6e 100%); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-6px); box-shadow: 0 20px 25px -12px rgba(0,0,0,0.15); }
+        .stat-card { transition: transform 0.2s; }
+        .stat-card:hover { transform: scale(1.02); }
+        .section-bg-light { background-color: #f8fafc; }
+        .counter-number { font-size: 2.5rem; font-weight: 800; line-height: 1; }
+        .swiper-button-next, .swiper-button-prev { color: #4f46e5; background: white; padding: 1rem; border-radius: 50%; width: 2.5rem; height: 2.5rem; }
+        .swiper-button-next:after, .swiper-button-prev:after { font-size: 1rem; font-weight: bold; }
+        .swiper-pagination-bullet-active { background-color: #4f46e5; }
+        .donation-card { transition: all 0.2s; cursor: pointer; }
+        .donation-card.selected { background-color: #e0e7ff; border-color: #4f46e5; transform: scale(1.02); }
+        .faq-question .fa-chevron-down { transition: transform 0.2s; }
+        .faq-question .rotate-180 { transform: rotate(180deg); }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .animate-marquee { animation: marquee 25s linear infinite; display: flex; width: max-content; }
+        .dark body { background-color: #0f172a; color: #e2e8f0; }
+        .dark .bg-white { background-color: #1e293b; }
+        .dark .bg-slate-50, .dark .bg-slate-100, .dark .section-bg-light { background-color: #0f172a; }
+        .dark .border { border-color: #334155; }
+        .dark .text-slate-600, .dark .text-slate-500, .dark .text-slate-400 { color: #cbd5e1; }
+        .dark .text-slate-800 { color: #f1f5f9; }
+        .dark .bg-indigo-50, .dark .bg-indigo-100 { background-color: #1e1b4b; }
+    </style>
+</head>
+<body class="bg-white text-slate-700">
+
+    <!-- HEADER (unchanged) -->
+    <header class="bg-white/95 dark:bg-slate-900/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-slate-200 dark:border-slate-700">
+        <div class="max-w-7xl mx-auto px-5 lg:px-8 py-4 flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center gap-3" data-aos="fade-right">
+                <div class="bg-indigo-700 p-2 rounded-xl shadow-md"><i class="fas fa-hand-holding-heart text-white text-2xl"></i></div>
+                <div><h1 class="text-xl font-extrabold tracking-tight text-slate-800 dark:text-white">TIMSupport <span class="text-indigo-700">Centre</span></h1><p class="text-xs text-slate-500 dark:text-slate-400">Transforming lives, building futures</p></div>
+            </div>
+            <nav class="flex flex-wrap gap-5 text-sm font-medium">
+                <a href="#home" class="hover:text-indigo-700 transition dark:hover:text-indigo-400">Home</a>
+                <a href="#about" class="hover:text-indigo-700 transition dark:hover:text-indigo-400">About</a>
+                <a href="#programs" class="hover:text-indigo-700 transition dark:hover:text-indigo-400">Programs</a>
+                <a href="#events" class="hover:text-indigo-700 transition dark:hover:text-indigo-400">Events</a>
+                <a href="#donate" class="hover:text-indigo-700 transition dark:hover:text-indigo-400">Donate</a>
+                <a href="#contact" class="hover:text-indigo-700 transition dark:hover:text-indigo-400">Contact</a>
+            </nav>
+            <div class="flex gap-3 items-center">
+                <button id="darkModeToggle" class="text-slate-600 dark:text-slate-300 hover:text-indigo-600 text-lg"><i class="fas fa-moon"></i></button>
+                <a href="#membership" class="bg-indigo-600 text-white px-5 py-2 rounded-full text-sm font-semibold shadow-md hover:bg-indigo-700 transition"><i class="fas fa-user-plus mr-1"></i> Join us</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- HERO SECTION -->
+        <section id="home" class="hero-gradient text-white py-20 lg:py-28 relative overflow-hidden">
+            <div class="max-w-7xl mx-auto px-5 lg:px-8 grid md:grid-cols-2 gap-12 items-center">
+                <div data-aos="fade-up"><span class="inline-block bg-white/20 backdrop-blur-sm rounded-full px-4 py-1 text-sm font-semibold mb-4"><i class="fas fa-rocket mr-1"></i> Empowering Communities Since 2010</span><h1 class="text-4xl lg:text-5xl font-extrabold leading-tight">Together We Build <span class="text-amber-300">Sustainable Futures</span></h1><p class="text-lg text-indigo-100 mt-5">TIMSupport Centre drives social impact through expert mentorship, innovative programs, and strategic partnerships.</p><div class="flex flex-wrap gap-4 mt-8"><a href="#programs" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-7 py-3 rounded-full shadow-lg transition"><i class="fas fa-graduation-cap mr-2"></i> Explore Programs</a><a href="#donate" class="border border-white/40 hover:bg-white/10 px-7 py-3 rounded-full transition"><i class="fas fa-heart mr-2"></i> Donate Now</a></div></div>
+                <div class="relative hidden md:block" data-aos="fade-left"><img src="https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?w=600&auto=format" alt="Community impact" class="rounded-2xl shadow-2xl object-cover w-full h-80" /></div>
+            </div>
+        </section>
+
+        <!-- ABOUT -->
+        <section id="about" class="py-20 bg-white dark:bg-slate-900"><div class="max-w-7xl mx-auto px-5 lg:px-8 text-center"><span class="text-indigo-600 font-semibold"><i class="fas fa-info-circle mr-1"></i> OUR STORY</span><h2 class="text-3xl md:text-4xl font-bold mt-2 text-slate-800 dark:text-white">About TIMSupport Centre</h2><div class="w-20 h-1 bg-indigo-600 mx-auto mt-4 rounded-full"></div><p class="mt-6 text-lg text-slate-600 dark:text-slate-300 max-w-3xl mx-auto">TIMSupport Centre is a non-profit organization dedicated to bridging gaps in education, economic empowerment, and social development. Through tailored programs, expert guidance, and strong alliances, we unlock human potential across communities.</p></div></section>
+
+        <!-- CORE SERVICES -->
+        <section class="py-16 section-bg-light dark:bg-slate-800"><div class="max-w-7xl mx-auto px-5 lg:px-8"><div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6"><div class="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm text-center card-hover"><div class="bg-indigo-100 dark:bg-indigo-900 w-16 h-16 flex items-center justify-center rounded-2xl mx-auto"><i class="fas fa-chalkboard-user text-3xl text-indigo-700 dark:text-indigo-300"></i></div><h3 class="text-xl font-bold mt-4 dark:text-white">Capacity Building</h3><p class="text-slate-500 dark:text-slate-400 mt-2">Workshops & training for skills development</p></div><div class="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm text-center card-hover"><div class="bg-amber-100 dark:bg-amber-900 w-16 h-16 flex items-center justify-center rounded-2xl mx-auto"><i class="fas fa-hand-holding-usd text-3xl text-amber-700 dark:text-amber-300"></i></div><h3 class="text-xl font-bold mt-4 dark:text-white">Economic Empowerment</h3><p class="text-slate-500 dark:text-slate-400 mt-2">Small business grants & mentorship</p></div><div class="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm text-center card-hover"><div class="bg-emerald-100 dark:bg-emerald-900 w-16 h-16 flex items-center justify-center rounded-2xl mx-auto"><i class="fas fa-people-arrows text-3xl text-emerald-700 dark:text-emerald-300"></i></div><h3 class="text-xl font-bold mt-4 dark:text-white">Expert Network</h3><p class="text-slate-500 dark:text-slate-400 mt-2">Access to vetted specialists & advisors</p></div><div class="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm text-center card-hover"><div class="bg-rose-100 dark:bg-rose-900 w-16 h-16 flex items-center justify-center rounded-2xl mx-auto"><i class="fas fa-calendar-check text-3xl text-rose-700 dark:text-rose-300"></i></div><h3 class="text-xl font-bold mt-4 dark:text-white">Community Events</h3><p class="text-slate-500 dark:text-slate-400 mt-2">Conferences, webinars & networking</p></div></div></div></section>
+
+        <!-- FEATURED PROGRAMS (with Enroll button) -->
+        <section id="programs" class="py-20 bg-white dark:bg-slate-900">
+            <div class="max-w-7xl mx-auto px-5 lg:px-8">
+                <div class="flex flex-wrap justify-between items-center mb-8 gap-3">
+                    <div><h2 class="text-3xl font-bold text-slate-800 dark:text-white">Featured Programs</h2><p class="text-slate-500 dark:text-slate-400">Transformative initiatives driving impact</p></div>
+                    <input type="text" id="programSearch" placeholder="Search programs..." class="border rounded-xl p-2 px-4 focus:ring-2 focus:ring-indigo-400 dark:bg-slate-800 dark:border-slate-600">
+                </div>
+                <div id="programsContainer" class="grid md:grid-cols-2 lg:grid-cols-3 gap-7">Loading programs...</div>
+            </div>
+        </section>
+
+        <!-- UPCOMING EVENTS -->
+        <section id="events" class="py-16 section-bg-light dark:bg-slate-800"><div class="max-w-7xl mx-auto px-5 lg:px-8"><div id="eventsContainer" class="grid md:grid-cols-2 lg:grid-cols-3 gap-7">Loading events...</div></div></section>
+
+        <!-- EXPERT SWIPER -->
+        <section class="py-20 bg-white dark:bg-slate-900"><div class="max-w-7xl mx-auto px-5 lg:px-8"><div class="swiper expert-swiper"><div class="swiper-wrapper" id="expertsSwiperWrapper"></div><div class="swiper-pagination"></div><div class="swiper-button-next"></div><div class="swiper-button-prev"></div></div></div></section>
+
+        <!-- IMPACT STATS -->
+        <section class="py-16 bg-indigo-900 text-white"><div class="max-w-7xl mx-auto px-5 lg:px-8 text-center"><h2 class="text-3xl font-bold">Our Impact in Numbers</h2><div id="statsContainer" class="grid grid-cols-2 md:grid-cols-4 gap-8 mt-10">Loading statistics...</div></div></section>
+
+        <!-- SUCCESS STORIES -->
+        <section class="py-20 bg-white dark:bg-slate-900"><div class="max-w-7xl mx-auto px-5 lg:px-8"><div class="swiper story-swiper"><div class="swiper-wrapper" id="storiesSwiperWrapper"></div><div class="swiper-pagination"></div><div class="swiper-button-next"></div><div class="swiper-button-prev"></div></div></div></section>
+
+        <!-- MEMBERSHIP PLANS -->
+        <section id="membership" class="py-20 section-bg-light dark:bg-slate-800">
+            <div class="max-w-7xl mx-auto px-5 lg:px-8">
+                <div class="text-center mb-12"><h2 class="text-3xl font-bold text-slate-800 dark:text-white">Membership Plans</h2><p class="text-slate-500 dark:text-slate-400">Join a growing movement for social change</p></div>
+                <div id="plansContainer" class="grid md:grid-cols-3 gap-8">Loading plans...</div>
+                <p id="plansError" class="text-center text-rose-600 mt-4 hidden"></p>
+            </div>
+        </section>
+
+        <!-- DONATION SECTION (unchanged) -->
+        <section id="donate" class="py-20 bg-white dark:bg-slate-900">
+            <div class="max-w-7xl mx-auto px-5 lg:px-8">
+                <div class="text-center mb-12"><h2 class="text-3xl font-bold text-slate-800 dark:text-white">Make a Donation</h2><p class="text-slate-500 dark:text-slate-400">Your support transforms lives</p></div>
+                <div class="max-w-2xl mx-auto bg-slate-50 dark:bg-slate-800 rounded-2xl shadow-lg p-8">
+                    <div class="mb-6"><label class="block font-semibold mb-3 dark:text-white">Select amount</label><div class="grid grid-cols-3 gap-3 mb-3" id="donationAmounts"><div class="donation-card text-center p-3 border rounded-xl hover:bg-indigo-50" data-amount="10">$10</div><div class="donation-card text-center p-3 border rounded-xl hover:bg-indigo-50" data-amount="25">$25</div><div class="donation-card text-center p-3 border rounded-xl hover:bg-indigo-50" data-amount="50">$50</div><div class="donation-card text-center p-3 border rounded-xl hover:bg-indigo-50" data-amount="100">$100</div><div class="donation-card text-center p-3 border rounded-xl hover:bg-indigo-50" data-amount="250">$250</div><div class="donation-card text-center p-3 border rounded-xl hover:bg-indigo-50" data-amount="500">$500</div></div><input type="number" id="customAmount" placeholder="Custom amount (USD)" class="w-full border rounded-xl p-3 focus:ring-2 focus:ring-indigo-400 dark:bg-slate-700 dark:border-slate-600"></div>
+                    <div class="mb-6"><label class="block font-semibold mb-2 dark:text-white">Full name</label><input type="text" id="donorName" class="w-full border rounded-xl p-3 mb-3 dark:bg-slate-700 dark:border-slate-600"><label class="block font-semibold mb-2 dark:text-white">Email address</label><input type="email" id="donorEmail" class="w-full border rounded-xl p-3 dark:bg-slate-700 dark:border-slate-600"></div>
+                    <div class="mb-6"><label class="block font-semibold mb-2 dark:text-white">Donation type</label><select id="donationType" class="w-full border rounded-xl p-3 dark:bg-slate-700 dark:border-slate-600"><option value="one-time">One-time donation</option><option value="monthly">Monthly recurring</option></select></div>
+                    <button id="donateBtn" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl transition"><i class="fas fa-credit-card mr-2"></i> Donate Now</button>
+                    <p class="text-xs text-slate-400 dark:text-slate-500 text-center mt-4">Secure payment powered by Stripe. Test card: 4242 4242 4242 4242</p>
+                    <div id="donationMessage" class="mt-3 text-center text-sm hidden"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PARTNERS MARQUEE -->
+        <section class="py-16 bg-white dark:bg-slate-900 border-y border-slate-100 dark:border-slate-700 overflow-hidden"><div class="max-w-7xl mx-auto px-5 lg:px-8"><h2 class="text-3xl font-bold text-center text-slate-800 dark:text-white mb-8">Our Partners & Sponsors</h2><div class="relative"><div class="flex overflow-hidden" id="partnersMarquee"></div></div></div></section>
+
+        <!-- FAQ -->
+        <section class="py-20 section-bg-light dark:bg-slate-800"><div class="max-w-4xl mx-auto px-5 lg:px-8"><div class="text-center mb-12"><h2 class="text-3xl font-bold text-slate-800 dark:text-white">Frequently Asked Questions</h2><p class="text-slate-500 dark:text-slate-400">Everything you need to know</p></div><div class="space-y-4" id="faqContainer"></div></div></section>
+
+        <!-- VOLUNTEER -->
+        <section class="py-20 bg-white dark:bg-slate-900"><div class="max-w-4xl mx-auto px-5 lg:px-8"><div class="text-center mb-8"><h2 class="text-3xl font-bold text-slate-800 dark:text-white">Become a Volunteer</h2><p class="text-slate-600 dark:text-slate-300">Join our passionate team and make a difference</p></div><div class="bg-slate-50 dark:bg-slate-800 rounded-2xl shadow-xl p-8"><form id="volunteerForm" class="space-y-4"><div class="grid md:grid-cols-2 gap-4"><input type="text" id="volName" placeholder="Full name" required class="border rounded-xl p-3 dark:bg-slate-700 dark:border-slate-600"><input type="email" id="volEmail" placeholder="Email address" required class="border rounded-xl p-3 dark:bg-slate-700 dark:border-slate-600"></div><input type="tel" id="volPhone" placeholder="Phone number" class="border rounded-xl p-3 dark:bg-slate-700 dark:border-slate-600"><select id="volArea" class="border rounded-xl p-3 dark:bg-slate-700 dark:border-slate-600"><option value="">Select interest area</option><option>Event coordination</option><option>Mentorship</option><option>Fundraising</option><option>Administration</option><option>Technical support</option></select><textarea id="volMessage" rows="3" placeholder="Why do you want to volunteer?" class="border rounded-xl p-3 dark:bg-slate-700 dark:border-slate-600"></textarea><button type="submit" class="w-full bg-indigo-700 hover:bg-indigo-800 text-white font-semibold py-3 rounded-xl transition"><i class="fas fa-hands-helping mr-2"></i> Submit Application</button></form><p id="volunteerFeedback" class="text-sm text-center mt-3 hidden"></p></div></div></section>
+
+        <!-- CAMPAIGN -->
+        <section class="py-20 section-bg-light dark:bg-slate-800"><div class="max-w-4xl mx-auto px-5 lg:px-8 text-center"><h2 class="text-3xl font-bold text-slate-800 dark:text-white">Current Campaign</h2><p class="text-slate-600 dark:text-slate-300 mt-2 mb-8">Help us reach our goal</p><div id="campaignContainer" class="bg-white dark:bg-slate-900 rounded-2xl p-8 shadow-md"></div></div></section>
+
+        <!-- NEWSLETTER -->
+        <section class="py-16 bg-indigo-50 dark:bg-indigo-950"><div class="max-w-4xl mx-auto text-center px-5"><i class="fas fa-envelope-open-text text-indigo-600 dark:text-indigo-400 text-4xl mb-4"></i><h2 class="text-3xl font-bold text-slate-800 dark:text-white">Stay Updated</h2><p class="text-slate-600 dark:text-slate-300 mt-2 mb-6">Subscribe to our newsletter for impact stories, events, and opportunities.</p><form id="newsletterForm" class="flex flex-wrap gap-3 justify-center"><input type="email" id="newsletterEmail" placeholder="Your email address" required class="px-5 py-3 rounded-full border border-slate-300 dark:border-slate-600 w-64 md:w-80 dark:bg-slate-800"><button type="submit" class="bg-indigo-700 hover:bg-indigo-800 text-white px-6 py-3 rounded-full font-semibold transition"><i class="fas fa-paper-plane mr-2"></i> Subscribe</button></form><p id="newsletterMsg" class="text-sm mt-3 hidden"></p></div></section>
+
+        <!-- CONTACT -->
+        <section id="contact" class="py-20 bg-white dark:bg-slate-900"><div class="max-w-7xl mx-auto px-5 lg:px-8 grid md:grid-cols-2 gap-12"><div><span class="text-indigo-600 font-semibold"><i class="fas fa-phone-alt mr-1"></i> Get in touch</span><h2 class="text-3xl font-bold mt-2 text-slate-800 dark:text-white">Contact Information</h2><div class="mt-6 space-y-5"><div class="flex gap-4"><i class="fas fa-map-marker-alt text-indigo-600 text-xl mt-1"></i><div><h4 class="font-bold dark:text-white">Head Office</h4><p class="text-slate-600 dark:text-slate-400">123 Empowerment Avenue, Nairobi, Kenya</p></div></div><div class="flex gap-4"><i class="fas fa-phone-alt text-indigo-600 text-xl"></i><div><h4 class="font-bold dark:text-white">Call us</h4><p class="text-slate-600 dark:text-slate-400">+254 700 123 456</p></div></div><div class="flex gap-4"><i class="fas fa-envelope text-indigo-600 text-xl"></i><div><h4 class="font-bold dark:text-white">Email</h4><p class="text-slate-600 dark:text-slate-400">hello@timsupport.org</p></div></div><div class="flex gap-4"><i class="fas fa-clock text-indigo-600 text-xl"></i><div><h4 class="font-bold dark:text-white">Working hours</h4><p class="text-slate-600 dark:text-slate-400">Mon-Fri: 9am - 5pm (EAT)</p></div></div></div><div class="mt-8 flex gap-4 text-2xl text-slate-500 dark:text-slate-400"><i class="fab fa-twitter hover:text-indigo-600 cursor-pointer"></i><i class="fab fa-facebook hover:text-indigo-600"></i><i class="fab fa-linkedin hover:text-indigo-600"></i><i class="fab fa-instagram hover:text-indigo-600"></i></div></div><div><div class="bg-slate-50 dark:bg-slate-800 p-6 rounded-2xl shadow-sm"><h3 class="text-xl font-bold mb-4 dark:text-white">Send us a message</h3><form id="contactForm" class="space-y-4"><input type="text" placeholder="Full name" id="contactName" class="w-full border rounded-xl p-3 dark:bg-slate-700 dark:border-slate-600" required><input type="email" placeholder="Email address" id="contactEmail" class="w-full border rounded-xl p-3 dark:bg-slate-700 dark:border-slate-600" required><textarea rows="3" placeholder="How can we help?" id="contactMsg" class="w-full border rounded-xl p-3 dark:bg-slate-700 dark:border-slate-600" required></textarea><button type="submit" class="bg-indigo-700 hover:bg-indigo-800 text-white font-semibold py-3 rounded-xl w-full transition"><i class="fas fa-paper-plane mr-2"></i> Submit inquiry</button></form><p id="formFeedback" class="text-sm mt-3 text-center hidden"></p></div><div class="mt-6 h-48 bg-slate-200 dark:bg-slate-700 rounded-xl overflow-hidden"><iframe class="w-full h-full" frameborder="0" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d255282.3586524728!2d36.68278465!3d-1.30320785!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f1172d84d49a7%3A0xf7cf0254b297924c!2sNairobi%2C%20Kenya!5e0!3m2!1sen!2s!4v1691234567890!5m2!1sen!2s" allowfullscreen></iframe></div></div></div></section>
+    </main>
+
+    <footer class="bg-slate-900 dark:bg-black text-slate-300 py-10"><div class="max-w-7xl mx-auto px-5 lg:px-8 grid md:grid-cols-4 gap-8"><div><div class="flex items-center gap-2"><i class="fas fa-hand-holding-heart text-indigo-400 text-2xl"></i><span class="font-bold text-white text-lg">TIMSupport Centre</span></div><p class="mt-3 text-sm">Driving equitable development through collaboration and innovation.</p></div><div><h4 class="text-white font-semibold mb-3">Quick Links</h4><ul class="space-y-2 text-sm"><li><a href="#home" class="hover:text-white">Home</a></li><li><a href="#about" class="hover:text-white">About</a></li><li><a href="#programs" class="hover:text-white">Programs</a></li><li><a href="#events" class="hover:text-white">Events</a></li></ul></div><div><h4 class="text-white font-semibold mb-3">Resources</h4><ul class="space-y-2 text-sm"><li><a href="#">Impact Report</a></li><li><a href="#">Volunteer</a></li><li><a href="#">Donate</a></li><li><a href="#">Privacy Policy</a></li></ul></div><div><h4 class="text-white font-semibold mb-3">Subscribe</h4><p class="text-sm">Get updates on programs & events.</p><div class="flex mt-2"><input type="email" id="footerNewsletter" placeholder="Your email" class="p-2 rounded-l-lg w-full text-sm dark:bg-slate-800"><button id="footerNewsletterBtn" class="bg-indigo-600 px-3 rounded-r-lg"><i class="fas fa-arrow-right text-white"></i></button></div><p id="footerNewsMsg" class="text-xs mt-2 hidden"></p></div></div><div class="border-t border-slate-800 mt-8 pt-6 text-center text-sm">© 2025 TIMSupport Centre — All rights reserved. Together we rise.</div></footer>
+
+    <!-- MODALS -->
+    <!-- Event Registration Modal (existing) -->
+    <div id="eventModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden"><div class="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full mx-4 shadow-2xl"><div class="flex justify-between p-5 border-b dark:border-slate-700"><h3 class="text-xl font-bold dark:text-white" id="modalEventTitle">Register for Event</h3><button id="closeModalBtn"><i class="fas fa-times text-slate-400"></i></button></div><div class="p-5"><form id="eventRegistrationForm"><input type="hidden" id="regEventId"><input type="text" id="regAttendeeName" placeholder="Full name" required class="w-full border rounded-xl p-2 mb-3 dark:bg-slate-700 dark:border-slate-600"><input type="email" id="regEmail" placeholder="Email address" required class="w-full border rounded-xl p-2 mb-3 dark:bg-slate-700 dark:border-slate-600"><input type="tel" id="regPhone" placeholder="Phone number" class="w-full border rounded-xl p-2 mb-3 dark:bg-slate-700 dark:border-slate-600"><button type="submit" class="w-full bg-indigo-600 text-white py-2 rounded-xl">Register</button></form><p id="regFeedback" class="text-sm text-center mt-3 hidden"></p></div></div></div>
+
+    <!-- Program Enrollment Modal (NEW) -->
+    <div id="programEnrollModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden"><div class="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full mx-4 shadow-2xl"><div class="flex justify-between p-5 border-b dark:border-slate-700"><h3 class="text-xl font-bold dark:text-white">Enroll in Program</h3><button id="closeEnrollModalBtn"><i class="fas fa-times text-slate-400"></i></button></div><div class="p-5"><form id="programEnrollmentForm"><input type="hidden" id="enrollProgramId"><input type="text" id="enrollParticipantName" placeholder="Full name" required class="w-full border rounded-xl p-2 mb-3 dark:bg-slate-700 dark:border-slate-600"><input type="email" id="enrollEmail" placeholder="Email address" required class="w-full border rounded-xl p-2 mb-3 dark:bg-slate-700 dark:border-slate-600"><input type="tel" id="enrollPhone" placeholder="Phone number (optional)" class="w-full border rounded-xl p-2 mb-3 dark:bg-slate-700 dark:border-slate-600"><button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded-xl transition">Enroll Now</button></form><p id="enrollFeedback" class="text-sm text-center mt-3 hidden"></p></div></div></div>
+
+    <!-- CHAT WIDGET -->
+    <div id="chatWidget" class="fixed bottom-6 right-6 z-50"><button id="chatToggle" class="bg-indigo-600 hover:bg-indigo-700 text-white rounded-full w-14 h-14 shadow-lg flex items-center justify-center transition"><i class="fas fa-comment-dots text-2xl"></i></button><div id="chatBox" class="hidden absolute bottom-20 right-0 w-80 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border dark:border-slate-700 overflow-hidden"><div class="bg-indigo-600 text-white p-4 flex justify-between items-center"><span class="font-semibold">Support Chat</span><button id="chatClose" class="text-white hover:text-slate-200"><i class="fas fa-times"></i></button></div><div class="p-4"><p class="text-sm text-slate-600 dark:text-slate-300 mb-3">Leave a message and we'll get back to you within 24 hours.</p><input type="text" id="chatName" placeholder="Your name" class="w-full border rounded-lg p-2 mb-2 text-sm dark:bg-slate-700 dark:border-slate-600"><input type="email" id="chatEmail" placeholder="Your email" class="w-full border rounded-lg p-2 mb-2 text-sm dark:bg-slate-700 dark:border-slate-600"><textarea id="chatMessage" rows="3" placeholder="How can we help?" class="w-full border rounded-lg p-2 text-sm dark:bg-slate-700 dark:border-slate-600"></textarea><button id="chatSend" class="mt-2 bg-indigo-600 hover:bg-indigo-700 text-white w-full py-2 rounded-lg text-sm font-semibold">Send Message</button><p id="chatFeedback" class="text-xs text-center mt-2 hidden"></p></div></div></div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        const API_BASE = '/api';
+        let swiperExperts = null, swiperStories = null;
+        let allPrograms = [];
+
+        function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+        async function fetchAPI(endpoint, defaultValue = []) { try { const res = await fetch(`${API_BASE}${endpoint}`); if (!res.ok) return defaultValue; return await res.json() || defaultValue; } catch(e) { return defaultValue; } }
+
+        // ---------- Programs (with Enroll button) ----------
+        function renderPrograms(programs) { 
+            allPrograms = programs; 
+            filterPrograms(); 
+        }
+        function filterPrograms() { 
+            const term = document.getElementById('programSearch')?.value.toLowerCase() || ''; 
+            const filtered = allPrograms.filter(p => p.title?.toLowerCase().includes(term) || p.description?.toLowerCase().includes(term)); 
+            const container = document.getElementById('programsContainer'); 
+            if (!filtered.length) { container.innerHTML = '<div class="col-span-full text-center">No programs match.</div>'; return; } 
+            container.innerHTML = filtered.slice(0,6).map(p => `
+                <div class="bg-white dark:bg-slate-800 border dark:border-slate-700 rounded-2xl p-5 shadow-sm card-hover flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-3 mb-3">
+                            <i class="fas fa-graduation-cap text-indigo-600 text-xl"></i>
+                            <h3 class="font-bold text-xl dark:text-white">${escapeHtml(p.title)}</h3>
+                        </div>
+                        <p class="text-slate-500 dark:text-slate-400 text-sm mb-2">${escapeHtml(p.description || 'No description')}</p>
+                        <div class="flex justify-between text-xs text-slate-400">
+                            <span><i class="far fa-calendar-alt mr-1"></i> ${p.startDate || 'Flexible'} → ${p.endDate || 'Ongoing'}</span>
+                        </div>
+                    </div>
+                    <button class="enroll-program-btn mt-4 bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-200 transition" data-program-id="${p.id}" data-program-title="${escapeHtml(p.title)}">Enroll Now <i class="fas fa-arrow-right ml-1"></i></button>
+                </div>
+            `).join(''); 
+            attachEnrollButtons(); 
+        }
+        function attachEnrollButtons() {
+            document.querySelectorAll('.enroll-program-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    const programId = this.getAttribute('data-program-id');
+                    const programTitle = this.getAttribute('data-program-title');
+                    document.getElementById('enrollProgramId').value = programId;
+                    document.getElementById('programEnrollModal').classList.remove('hidden');
+                    // Optional: set modal title to program name
+                    const modalTitle = document.querySelector('#programEnrollModal .text-xl.font-bold');
+                    if (modalTitle) modalTitle.innerText = `Enroll in ${programTitle}`;
+                });
+            });
+        }
+
+        // ---------- Event rendering (existing) ----------
+        function renderEvents(events) { 
+            const container = document.getElementById('eventsContainer'); 
+            const upcoming = events.filter(e => e.date && new Date(e.date) >= new Date()).sort((a,b)=>new Date(a.date)-new Date(b.date)).slice(0,6); 
+            if(!upcoming.length) { container.innerHTML = '<div class="col-span-full text-center">No upcoming events.</div>'; return; } 
+            container.innerHTML = upcoming.map(ev => `
+                <div class="bg-white dark:bg-slate-800 border-l-4 border-indigo-500 rounded-2xl p-5 shadow-sm">
+                    <div class="flex justify-between">
+                        <h3 class="font-bold text-lg dark:text-white">${escapeHtml(ev.title)}</h3>
+                        <span class="bg-indigo-50 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 text-xs px-2 py-1 rounded-full"><i class="far fa-clock mr-1"></i> ${Math.ceil((new Date(ev.date)-new Date())/(1000*60*60*24))} days</span>
+                    </div>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 mt-1"><i class="fas fa-map-marker-alt mr-1"></i> ${ev.location || 'Online'} | ${ev.date}</p>
+                    <button class="register-event-btn text-indigo-600 text-sm font-medium" data-event-id="${ev.id}" data-event-title="${escapeHtml(ev.title)}">Register <i class="fas fa-arrow-right ml-1"></i></button>
+                </div>
+            `).join(''); 
+            attachEventRegisterButtons(); 
+        }
+        function attachEventRegisterButtons() { 
+            document.querySelectorAll('.register-event-btn').forEach(btn => btn.addEventListener('click', function(e) { 
+                document.getElementById('regEventId').value = this.getAttribute('data-event-id'); 
+                document.getElementById('modalEventTitle').innerText = `Register for ${this.getAttribute('data-event-title')}`; 
+                document.getElementById('eventModal').classList.remove('hidden'); 
+            })); 
+        }
+
+        // ---------- Rest of the homepage functions (unchanged) ----------
+        async function renderExpertsSwiper() { /* same as original */ 
+            const wrapper = document.getElementById('expertsSwiperWrapper'); 
+            let experts = await fetchAPI('/experts',[]); 
+            if(!experts.length) experts = [{name:"Jane Doe",expertise:"Education",email:"jane@example.com"}]; 
+            wrapper.innerHTML = experts.slice(0,12).map(exp => `<div class="swiper-slide"><div class="bg-slate-50 dark:bg-slate-800 rounded-2xl p-5 text-center"><div class="bg-indigo-100 dark:bg-indigo-900 w-24 h-24 rounded-full flex items-center justify-center mx-auto"><i class="fas fa-user-tie text-4xl text-indigo-700 dark:text-indigo-300"></i></div><h3 class="font-bold text-lg mt-3 dark:text-white">${escapeHtml(exp.name)}</h3><p class="text-indigo-600 text-sm">${escapeHtml(exp.expertise)}</p><p class="text-xs text-slate-400">${exp.email || ''}</p></div></div>`).join(''); 
+            if(swiperExperts) swiperExperts.destroy(true,true); 
+            swiperExperts = new Swiper('.expert-swiper', { slidesPerView:1, spaceBetween:20, loop:experts.length>3, pagination:{el:'.swiper-pagination',clickable:true}, navigation:{nextEl:'.swiper-button-next',prevEl:'.swiper-button-prev'}, breakpoints:{640:{slidesPerView:2},1024:{slidesPerView:4}} }); 
+        }
+        async function renderStoriesSwiper() { /* same as original */ 
+            const wrapper = document.getElementById('storiesSwiperWrapper'); 
+            let stories = await fetchAPI('/successStories',[]); 
+            if(!stories.length) stories = [{author:"Grace M.",story:"TIMSupport transformed my business.",role:"Entrepreneur"}]; 
+            wrapper.innerHTML = stories.map(s => `<div class="swiper-slide"><div class="bg-indigo-50 dark:bg-indigo-950 rounded-2xl p-8 text-center"><i class="fas fa-quote-left text-indigo-300 text-3xl mb-4 block"></i><p class="italic text-slate-700 dark:text-slate-300 text-lg">“${escapeHtml(s.story)}”</p><div class="mt-6"><div class="font-bold text-indigo-800 dark:text-indigo-300">${escapeHtml(s.author)}</div><div class="text-sm text-slate-500">${escapeHtml(s.role)}</div></div></div></div>`).join(''); 
+            if(swiperStories) swiperStories.destroy(true,true); 
+            swiperStories = new Swiper('.story-swiper', { slidesPerView:1, spaceBetween:30, loop:stories.length>1, pagination:{el:'.swiper-pagination',clickable:true}, navigation:{nextEl:'.swiper-button-next',prevEl:'.swiper-button-prev'}, breakpoints:{768:{slidesPerView:2},1024:{slidesPerView:3}} }); 
+        }
+        async function renderImpactStats() { 
+            const container = document.getElementById('statsContainer'); 
+            let stats = await fetchAPI('/impactStats',[]); 
+            if(!stats.length) stats = [{label:"Communities",value:"12"},{label:"Beneficiaries",value:"8200"},{label:"Mentors",value:"45"},{label:"Partners",value:"32"}]; 
+            container.innerHTML = stats.map(s => `<div class="stat-card text-center"><div class="counter-number" data-target="${parseInt(s.value)||0}">0</div><div class="text-indigo-200 mt-2">${escapeHtml(s.label)}</div></div>`).join(''); 
+            const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if(entry.isIntersecting){ const el=entry.target; const target=parseInt(el.getAttribute('data-target')); if(target && el.innerText=='0'){ let current=0; const step=Math.ceil(target/75); const interval=setInterval(()=>{ current+=step; if(current>=target){ el.innerText=target; clearInterval(interval); }else el.innerText=current; },20); } observer.unobserve(el); } }); }, {threshold:0.5}); 
+            document.querySelectorAll('.counter-number').forEach(c=>observer.observe(c)); 
+        }
+        async function renderMembershipPlans() { 
+            const container = document.getElementById('plansContainer'); 
+            const errorDiv = document.getElementById('plansError'); 
+            try { let plans = await fetchAPI('/membershipPlans',[]); if(!plans.length) plans = [{title:"Supporter",price:"Free",features:"Newsletters, Updates"},{title:"Partner",price:"$25/mo",features:"Events, Priority support"},{title:"Ambassador",price:"$100/mo",features:"Board access, Annual gala"}]; container.innerHTML = plans.map(p => `<div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-md text-center border-t-4 border-indigo-400"><h3 class="text-2xl font-bold dark:text-white">${escapeHtml(p.title)}</h3><div class="text-3xl font-black mt-2">${escapeHtml(p.price)}</div><ul class="mt-4 space-y-2 text-sm">${(p.features ? p.features.split(',').map(f => `<li><i class="fas fa-check-circle text-indigo-500 mr-2"></i>${f.trim()}</li>`) : ['<li>Flexible benefits</li>']).join('')}</ul><button class="mt-6 bg-indigo-700 hover:bg-indigo-800 text-white px-5 py-2 rounded-full w-full select-plan" data-plan="${p.title}">Select Plan</button></div>`).join(''); 
+            document.querySelectorAll('.select-plan').forEach(btn => btn.addEventListener('click',()=>alert(`Thank you for interest in ${btn.getAttribute('data-plan')} plan. We'll contact you.`))); if(errorDiv) errorDiv.classList.add('hidden'); } catch(e){ errorDiv.innerText='Unable to load plans'; errorDiv.classList.remove('hidden'); } 
+        }
+        async function renderPartnersMarquee() { 
+            const container = document.getElementById('partnersMarquee'); 
+            let partners = await fetchAPI('/partners',[]); 
+            if(!partners.length) partners = [{name:"TechCorp",type:"Tech"},{name:"Green Fund",type:"NGO"}]; 
+            const content = partners.map(p => `<div class="flex-shrink-0 mx-8 bg-slate-50 dark:bg-slate-800 rounded-xl px-6 py-3 shadow-sm"><i class="fas fa-building text-indigo-500 mr-2"></i><span class="font-semibold dark:text-white">${escapeHtml(p.name)}</span><span class="text-xs text-slate-400 ml-1">${escapeHtml(p.type)}</span></div>`).join(''); 
+            container.innerHTML = `<div class="flex animate-marquee">${content}${content}</div>`; 
+        }
+        async function renderCampaign() { 
+            const container = document.getElementById('campaignContainer'); 
+            let campaign = null; 
+            try { const res = await fetch(`${API_BASE}/campaigns`); if(res.ok){ const campaigns = await res.json(); if(campaigns.length) campaign = campaigns[0]; } } catch(e){} 
+            if(!campaign) campaign = { title:"Education For All", goal:50000, raised:32450, description:"Providing school supplies." }; 
+            const percent = Math.min(100, Math.floor((campaign.raised/campaign.goal)*100)); 
+            container.innerHTML = `<h3 class="text-2xl font-bold dark:text-white">${escapeHtml(campaign.title)}</h3><p class="text-slate-600 dark:text-slate-300 mt-2">${escapeHtml(campaign.description)}</p><div class="mt-6"><div class="flex justify-between text-sm font-semibold mb-1"><span>Raised: $${campaign.raised.toLocaleString()}</span><span>Goal: $${campaign.goal.toLocaleString()}</span></div><div class="w-full bg-slate-200 rounded-full h-4 overflow-hidden"><div class="bg-emerald-500 h-4 rounded-full transition-all duration-1000" style="width: ${percent}%"></div></div><p class="text-sm text-slate-500 mt-2">${percent}% funded</p></div><button class="mt-6 bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-6 py-2 rounded-full"><i class="fas fa-hand-holding-usd mr-2"></i> Donate Now</button>`; 
+        }
+        function renderFAQ() { 
+            const container = document.getElementById('faqContainer'); 
+            const faqs = [{q:"How can I volunteer?",a:"Sign up through our volunteer form."},{q:"Are donations tax-deductible?",a:"Yes, receipts provided."},{q:"How do I apply for a program?",a:"Click Enroll Now on any program card."}]; 
+            container.innerHTML = faqs.map((faq,idx)=>`<div class="border dark:border-slate-700 rounded-xl overflow-hidden"><button class="faq-question w-full text-left p-5 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 font-semibold flex justify-between items-center" data-idx="${idx}"><span>${escapeHtml(faq.q)}</span><i class="fas fa-chevron-down transition-transform"></i></button><div class="faq-answer hidden p-5 bg-white dark:bg-slate-900 border-t dark:border-slate-700 text-slate-600 dark:text-slate-300" data-idx="${idx}">${escapeHtml(faq.a)}</div></div>`).join(''); 
+            document.querySelectorAll('.faq-question').forEach(btn => btn.addEventListener('click',()=>{ const idx=btn.getAttribute('data-idx'); const answer=document.querySelector(`.faq-answer[data-idx="${idx}"]`); const icon=btn.querySelector('i'); answer.classList.toggle('hidden'); icon.classList.toggle('rotate-180'); })); 
+        }
+
+        // Forms (unchanged)
+        function initVolunteerForm() { /* same as original */ 
+            const form = document.getElementById('volunteerForm'); if(!form) return; form.addEventListener('submit', async(e)=>{ e.preventDefault(); const data={ name:document.getElementById('volName').value, email:document.getElementById('volEmail').value, phone:document.getElementById('volPhone').value, area:document.getElementById('volArea').value, message:document.getElementById('volMessage').value, action:'volunteer_signup', timestamp:new Date().toISOString() }; try{ await fetch(`${API_BASE}/logs`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}); document.getElementById('volunteerFeedback').innerText='Thank you! We will contact you soon.'; document.getElementById('volunteerFeedback').classList.remove('hidden'); form.reset(); }catch(e){ document.getElementById('volunteerFeedback').innerText='Submission failed.'; } }); 
+        }
+        function initDonation() { 
+            let selectedAmount=null; 
+            document.querySelectorAll('.donation-card').forEach(card=>{ card.addEventListener('click',()=>{ document.querySelectorAll('.donation-card').forEach(c=>c.classList.remove('selected')); card.classList.add('selected'); selectedAmount=parseInt(card.getAttribute('data-amount')); document.getElementById('customAmount').value=''; }); }); 
+            document.getElementById('customAmount')?.addEventListener('input',()=>{ selectedAmount=parseFloat(document.getElementById('customAmount').value); document.querySelectorAll('.donation-card').forEach(c=>c.classList.remove('selected')); }); 
+            document.getElementById('donateBtn')?.addEventListener('click',async()=>{ const name=document.getElementById('donorName').value, email=document.getElementById('donorEmail').value, type=document.getElementById('donationType').value; let amount=selectedAmount; if(!amount && document.getElementById('customAmount').value) amount=parseFloat(document.getElementById('customAmount').value); if(!amount || amount<=0 || !name || !email) { document.getElementById('donationMessage').innerText='Please fill all fields and select an amount.'; document.getElementById('donationMessage').classList.remove('hidden'); return; } document.getElementById('donationMessage').innerHTML='Processing...'; try{ await fetch(`${API_BASE}/logs`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'donation_attempt',name,email,amount,type,timestamp:new Date().toISOString()})}); setTimeout(()=>{ document.getElementById('donationMessage').innerHTML=`Thank you ${name}! Your ${type} donation of $${amount} was received.`; document.getElementById('donorName').value=''; document.getElementById('donorEmail').value=''; selectedAmount=null; document.querySelectorAll('.donation-card').forEach(c=>c.classList.remove('selected')); document.getElementById('customAmount').value=''; },1500); }catch(e){ document.getElementById('donationMessage').innerText='Payment failed.'; } }); 
+        }
+        function initNewsletter() { 
+            const form=document.getElementById('newsletterForm'); if(!form) return; form.addEventListener('submit',async(e)=>{ e.preventDefault(); const email=document.getElementById('newsletterEmail').value; try{ await fetch(`${API_BASE}/logs`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'newsletter_signup',email,timestamp:new Date().toISOString()})}); document.getElementById('newsletterMsg').innerText='Subscribed!'; document.getElementById('newsletterMsg').classList.remove('hidden'); form.reset(); }catch(e){} }); 
+        }
+        function initContactForm() { 
+            const form=document.getElementById('contactForm'); if(!form) return; form.addEventListener('submit',async(e)=>{ e.preventDefault(); const name=document.getElementById('contactName').value, email=document.getElementById('contactEmail').value, message=document.getElementById('contactMsg').value; try{ await fetch(`${API_BASE}/logs`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'contact_form',name,email,message,timestamp:new Date().toISOString()})}); document.getElementById('formFeedback').innerText='Message sent!'; document.getElementById('formFeedback').classList.remove('hidden'); form.reset(); }catch(e){ document.getElementById('formFeedback').innerText='Failed.'; } }); 
+        }
+        function initChatWidget() { 
+            const toggle=document.getElementById('chatToggle'), box=document.getElementById('chatBox'), close=document.getElementById('chatClose'), send=document.getElementById('chatSend'); 
+            if(toggle) toggle.addEventListener('click',()=>box.classList.toggle('hidden')); 
+            if(close) close.addEventListener('click',()=>box.classList.add('hidden')); 
+            if(send) send.addEventListener('click',async()=>{ const name=document.getElementById('chatName').value, email=document.getElementById('chatEmail').value, msg=document.getElementById('chatMessage').value; if(!name||!email||!msg) { document.getElementById('chatFeedback').innerText='All fields required.'; return; } try{ await fetch(`${API_BASE}/logs`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'live_chat',name,email,msg,timestamp:new Date().toISOString()})}); document.getElementById('chatFeedback').innerText='Sent! We will reply soon.'; document.getElementById('chatName').value=''; document.getElementById('chatEmail').value=''; document.getElementById('chatMessage').value=''; setTimeout(()=>box.classList.add('hidden'),2000); }catch(e){ document.getElementById('chatFeedback').innerText='Failed.'; } }); 
+        }
+        function initDarkMode() { 
+            const toggle=document.getElementById('darkModeToggle'); if(!toggle) return; const html=document.documentElement; const icon=toggle.querySelector('i'); if(localStorage.getItem('darkMode')==='enabled'){ html.classList.add('dark'); icon.classList.remove('fa-moon'); icon.classList.add('fa-sun'); } toggle.addEventListener('click',()=>{ if(html.classList.contains('dark')){ html.classList.remove('dark'); localStorage.setItem('darkMode','disabled'); icon.classList.remove('fa-sun'); icon.classList.add('fa-moon'); }else{ html.classList.add('dark'); localStorage.setItem('darkMode','enabled'); icon.classList.remove('fa-moon'); icon.classList.add('fa-sun'); } }); 
+        }
+
+        // Program enrollment form submission
+        async function initProgramEnrollment() {
+            const form = document.getElementById('programEnrollmentForm');
+            if (!form) return;
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const programId = document.getElementById('enrollProgramId').value;
+                const participantName = document.getElementById('enrollParticipantName').value;
+                const email = document.getElementById('enrollEmail').value;
+                const phone = document.getElementById('enrollPhone').value;
+                if (!programId || !participantName || !email) {
+                    document.getElementById('enrollFeedback').innerText = 'Please fill all required fields.';
+                    document.getElementById('enrollFeedback').classList.remove('hidden');
+                    return;
+                }
+                try {
+                    const response = await fetch(`${API_BASE}/programEnrollments`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ programId, participantName, email, phone })
+                    });
+                    if (!response.ok) throw new Error('Enrollment failed');
+                    const result = await response.json();
+                    document.getElementById('enrollFeedback').innerText = `✅ Successfully enrolled in the program! Your enrollment ID: ${result.id}`;
+                    document.getElementById('enrollFeedback').classList.remove('hidden');
+                    form.reset();
+                    setTimeout(() => {
+                        document.getElementById('programEnrollModal').classList.add('hidden');
+                        document.getElementById('enrollFeedback').classList.add('hidden');
+                    }, 3000);
+                } catch (err) {
+                    document.getElementById('enrollFeedback').innerText = '❌ Enrollment failed. Please try again later.';
+                    document.getElementById('enrollFeedback').classList.remove('hidden');
+                }
+            });
+        }
+
+        // ---------- Load All ----------
+        window.addEventListener('DOMContentLoaded', async () => {
+            AOS.init({ duration: 800, once: true });
+            const [programs, events] = await Promise.all([fetchAPI('/programs',[]), fetchAPI('/events',[])]);
+            renderPrograms(programs);
+            renderEvents(events);
+            await renderExpertsSwiper();
+            await renderStoriesSwiper();
+            await renderImpactStats();
+            await renderMembershipPlans();
+            await renderPartnersMarquee();
+            await renderCampaign();
+            renderFAQ();
+            initVolunteerForm();
+            initDonation();
+            initNewsletter();
+            initContactForm();
+            initChatWidget();
+            initDarkMode();
+            initProgramEnrollment(); // NEW: handle program enrollment form
+
+            document.getElementById('programSearch')?.addEventListener('input', filterPrograms);
+            document.getElementById('closeModalBtn')?.addEventListener('click',()=>document.getElementById('eventModal').classList.add('hidden'));
+            document.getElementById('closeEnrollModalBtn')?.addEventListener('click',()=>document.getElementById('programEnrollModal').classList.add('hidden'));
+            document.getElementById('eventModal')?.addEventListener('click',(e)=>{ if(e.target===document.getElementById('eventModal')) document.getElementById('eventModal').classList.add('hidden'); });
+            document.getElementById('programEnrollModal')?.addEventListener('click',(e)=>{ if(e.target===document.getElementById('programEnrollModal')) document.getElementById('programEnrollModal').classList.add('hidden'); });
+
+            // Event registration form (existing)
+            const regForm = document.getElementById('eventRegistrationForm');
+            if(regForm) regForm.addEventListener('submit', async (e) => { e.preventDefault(); const eventId=document.getElementById('regEventId').value, name=document.getElementById('regAttendeeName').value, email=document.getElementById('regEmail').value, phone=document.getElementById('regPhone').value; try{ await fetch(`${API_BASE}/eventRegistrations`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({eventId,attendeeName:name,email,phone,registrationDate:new Date().toISOString()})}); document.getElementById('regFeedback').innerText='Registered successfully!'; document.getElementById('regFeedback').classList.remove('hidden'); regForm.reset(); setTimeout(()=>document.getElementById('eventModal').classList.add('hidden'),1500); }catch(e){ document.getElementById('regFeedback').innerText='Registration failed.'; } });
+
+            document.getElementById('footerNewsletterBtn')?.addEventListener('click', async () => { const email=document.getElementById('footerNewsletter').value; if(email){ await fetch(`${API_BASE}/logs`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'footer_newsletter',email,timestamp:new Date().toISOString()})}); document.getElementById('footerNewsMsg').innerText='Subscribed!'; document.getElementById('footerNewsMsg').classList.remove('hidden'); } });
+        });
+    </script>
+</body>
+  </html>
