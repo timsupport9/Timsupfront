@@ -1,5 +1,0 @@
-# Proxy all API requests to your Render backend
-/api/*  https://management-dashboard-wj89.onrender.com/api/:splat  200
-
-# For any other request, serve index.html (SPA fallback)
-/*      /index.html  200
