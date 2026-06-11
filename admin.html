@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foundation Hub – Complete Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.development.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.development.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.2/dist/axios.min.js"></script>
+    <style>body { background: #f1f5f9; font-family: 'Inter', sans-serif; }</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+    const API_BASE = 'https://management-dashboard-wj89.onrender.com/api';
+    axios.defaults.baseURL = API_BASE;
+
+    // ---------- Toast Context ----------
+    const ToastContext = React.createContext();
+    const useToast = () => React.useContext(ToastContext);
+
+    // ---------- useCrud with detailed error handling ----------
+    function useCrud(endpoint) {
+        const [items, setItems] = React.useState([]);
+        const [loading, setLoading] = React.useState(true);
+        const [searchTerm, setSearchTerm] = React.useState('');
+        
+        const fetchAll = React.useCallback(async () => {
+            try {
+                const res = await axios.get(`/${endpoint}`);
+                setItems(res.data);
+            } catch (err) {
+                // silent; toast handled by manager
+            } finally {
+                setLoading(false);
+            }
+        }, [endpoint]);
+
+        React.useEffect(() => {
+            fetchAll();
+        }, [fetchAll]);
+
+        const createItem = async (data) => {
+            try {
+                const res = await axios.post(`/${endpoint}`, data);
+                await fetchAll();
+                return { success: true, data: res.data };
+            } catch (err) {
+                const msg = err.response?.data?.error || err.message;
+                return { success: false, error: msg };
+            }
+        };
+
+        const updateItem = async (id, data) => {
+            try {
+                const res = await axios.put(`/${endpoint}/${id}`, data);
+                await fetchAll();
+                return { success: true, data: res.data };
+            } catch (err) {
+                const msg = err.response?.data?.error || err.message;
+                return { success: false, error: msg };
+            }
+        };
+
+        const deleteItem = async (id) => {
+            if (!confirm('Delete permanently?')) return { success: false, error: 'Cancelled' };
+            try {
+                await axios.delete(`/${endpoint}/${id}`);
+                await fetchAll();
+                return { success: true };
+            } catch (err) {
+                const msg = err.response?.data?.error || err.message;
+                return { success: false, error: msg };
+            }
+        };
+
+        const filteredItems = items.filter(item =>
+            Object.values(item).some(val =>
+                String(val).toLowerCase().includes(searchTerm.toLowerCase())
+            )
+        );
+
+        return { items: filteredItems, allItems: items, loading, createItem, updateItem, deleteItem, searchTerm, setSearchTerm, refetch: fetchAll };
+    }
+
+    // ---------- Modal Component ----------
+    const Modal = React.memo(({ isOpen, onClose, title, children }) => {
+        if (!isOpen) return null;
+        return (
+            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
+                <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl" onClick={e => e.stopPropagation()}>
+                    <div className="flex justify-between p-5 border-b">
+                        <h3 className="text-xl font-bold">{title}</h3>
+                        <button onClick={onClose}><i className="fas fa-times text-slate-400"></i></button>
+                    </div>
+                    <div className="p-5">{children}</div>
+                </div>
+            </div>
+        );
+    });
+
+    // ---------- Generic Comprehensive Manager ----------
+    function createManager(displayName, endpoint, fields, options = {}) {
+        const Manager = () => {
+            const { items, loading, createItem, updateItem, deleteItem, searchTerm, setSearchTerm, refetch } = useCrud(endpoint);
+            const [modalOpen, setModalOpen] = React.useState(false);
+            const [editing, setEditing] = React.useState(null);
+            const [form, setForm] = React.useState(Object.fromEntries(fields.map(f => [f.key, ''])));
+            const toast = useToast();
+
+            const openCreate = () => {
+                setEditing(null);
+                setForm(Object.fromEntries(fields.map(f => [f.key, ''])));
+                setModalOpen(true);
+            };
+            const openEdit = (item) => {
+                setEditing(item);
+                setForm(Object.fromEntries(fields.map(f => [f.key, item[f.key] || ''])));
+                setModalOpen(true);
+            };
+            const handleSubmit = async () => {
+                let result;
+                if (editing) result = await updateItem(editing.id, form);
+                else result = await createItem(form);
+                if (result.success) {
+                    toast?.show(`${displayName} saved`, 'success');
+                    setModalOpen(false);
+                } else {
+                    toast?.show(`Save failed: ${result.error}`, 'error');
+                }
+            };
+
+            if (loading) return <div className="animate-pulse p-8 text-center">Loading {displayName}...</div>;
+
+            return (
+                <div>
+                    <div className="flex flex-wrap justify-between items-center gap-4 mb-6">
+                        <h2 className="text-2xl font-bold text-slate-800">{displayName}</h2>
+                        <div className="flex gap-3">
+                            <div className="relative">
+                                <i className="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                                <input type="text" placeholder="Search..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-10 pr-4 py-2 border rounded-xl w-64 focus:ring-2 focus:ring-indigo-500" />
+                            </div>
+                            <button onClick={openCreate} className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-xl shadow flex items-center gap-2 transition">
+                                <i className="fas fa-plus"></i> Add {displayName.slice(0,-1)}
+                            </button>
+                        </div>
+                    </div>
+                    <div className="overflow-x-auto rounded-xl border border-slate-200 shadow-sm">
+                        <table className="min-w-full bg-white">
+                            <thead className="bg-slate-100">
+                                <tr>
+                                    {fields.map(f => <th key={f.key} className="p-3 text-left font-semibold text-slate-700">{f.label}</th>)}
+                                    <th className="p-3 text-left">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {items.map(item => (
+                                    <tr key={item.id} className="border-t border-slate-100 hover:bg-slate-50 transition">
+                                        {fields.map(f => <td key={f.key} className="p-3">{item[f.key] || '—'}</td>)}
+                                        <td className="p-3 space-x-2">
+                                            <button onClick={() => openEdit(item)} className="text-indigo-600 hover:text-indigo-800 p-1"><i className="fas fa-edit"></i></button>
+                                            <button onClick={async () => { const res = await deleteItem(item.id); if (res.success) toast?.show('Deleted', 'success'); else toast?.show(`Delete failed: ${res.error}`, 'error'); }} className="text-rose-500 hover:text-rose-700 p-1"><i className="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                ))}
+                                {items.length === 0 && <tr><td colSpan={fields.length+1} className="p-8 text-center text-slate-400">No matching records found</td></tr>}
+                            </tbody>
+                        </table>
+                    </div>
+                    <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={editing ? `Edit ${displayName.slice(0,-1)}` : `New ${displayName.slice(0,-1)}`}>
+                        <div className="space-y-4">
+                            {fields.map(f => (
+                                <div key={f.key}>
+                                    <label className="block text-sm font-medium text-slate-700 mb-1">{f.label}</label>
+                                    <input type="text" value={form[f.key]} onChange={e => setForm({...form, [f.key]: e.target.value})} className="w-full border border-slate-300 rounded-xl p-2 focus:ring-2 focus:ring-indigo-500" />
+                                </div>
+                            ))}
+                            <button onClick={handleSubmit} className="w-full bg-indigo-600 text-white py-2 rounded-xl hover:bg-indigo-700 transition mt-2">Save</button>
+                        </div>
+                    </Modal>
+                </div>
+            );
+        };
+        return React.memo(Manager);
+    }
+
+    // ---------- Definition of all standard managers ----------
+    const ExpertManager = createManager('Experts', 'experts', [
+        { key: 'name', label: 'Full Name' }, { key: 'expertise', label: 'Expertise Area' }, { key: 'email', label: 'Email' }, { key: 'phone', label: 'Phone' }
+    ]);
+    const EventManager = createManager('Events', 'events', [
+        { key: 'title', label: 'Event Title' }, { key: 'date', label: 'Date (YYYY-MM-DD)' }, { key: 'location', label: 'Location' }, { key: 'capacity', label: 'Capacity' }
+    ]);
+    const ActivityManager = createManager('Activities', 'activities', [
+        { key: 'title', label: 'Activity Title' }, { key: 'description', label: 'Description' }, { key: 'date', label: 'Date' }
+    ]);
+    const ProgramManager = createManager('Programs', 'programs', [
+        { key: 'title', label: 'Program Name' }, { key: 'description', label: 'Description' }, { key: 'startDate', label: 'Start Date' }, { key: 'endDate', label: 'End Date' }
+    ]);
+    const PartnerManager = createManager('Partners', 'partners', [
+        { key: 'name', label: 'Partner Name' }, { key: 'type', label: 'Type (NGO/Corporate/Government)' }, { key: 'contact', label: 'Contact Person' }
+    ]);
+    const GoalManager = createManager('Goals', 'goals', [
+        { key: 'title', label: 'Goal Title' }, { key: 'target', label: 'Target Value' }, { key: 'deadline', label: 'Deadline' }
+    ]);
+    const KPIManager = createManager('KPIs', 'kpis', [
+        { key: 'indicator', label: 'KPI Indicator' }, { key: 'value', label: 'Current Value' }, { key: 'goalId', label: 'Associated Goal ID' }
+    ]);
+    const ProjectManager = createManager('Projects', 'projects', [
+        { key: 'name', label: 'Project Name' }, { key: 'status', label: 'Status (Planning/Active/Completed)' }, { key: 'deadline', label: 'Deadline' }
+    ]);
+
+    // ---------- Allocations Manager (special: auto date) ----------
+    const AllocationManager = () => {
+        const { items, loading, createItem, deleteItem, searchTerm, setSearchTerm, refetch } = useCrud('allocations');
+        const [showForm, setShowForm] = React.useState(false);
+        const [form, setForm] = React.useState({ partnerId: '', amount: '', description: '' });
+        const toast = useToast();
+
+        const createAllocation = async () => {
+            try {
+                await axios.post('/allocations', form);
+                await refetch();
+                toast?.show('Allocation created', 'success');
+                setShowForm(false);
+                setForm({ partnerId: '', amount: '', description: '' });
+            } catch (err) {
+                toast?.show(`Failed: ${err.response?.data?.error || err.message}`, 'error');
+            }
+        };
+
+        if (loading) return <div className="animate-pulse p-8">Loading allocations...</div>;
+
+        return (
+            <div>
+                <div className="flex flex-wrap justify-between items-center gap-4 mb-6">
+                    <h2 className="text-2xl font-bold">Allocations</h2>
+                    <div className="flex gap-3">
+                        <div className="relative"><i className="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i><input type="text" placeholder="Search..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-10 pr-4 py-2 border rounded-xl w-64" /></div>
+                        <button onClick={() => setShowForm(true)} className="bg-indigo-600 text-white px-5 py-2 rounded-xl shadow"><i className="fas fa-plus"></i> New Allocation</button>
+                    </div>
+                </div>
+                {showForm && (
+                    <div className="bg-slate-50 p-5 rounded-xl mb-6 border shadow-sm">
+                        <h3 className="font-semibold mb-3">Create Allocation</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <input placeholder="Partner ID" value={form.partnerId} onChange={e => setForm({...form, partnerId: e.target.value})} className="border p-2 rounded-xl" />
+                            <input placeholder="Amount (USD)" value={form.amount} onChange={e => setForm({...form, amount: e.target.value})} className="border p-2 rounded-xl" />
+                            <input placeholder="Description" value={form.description} onChange={e => setForm({...form, description: e.target.value})} className="border p-2 rounded-xl" />
+                        </div>
+                        <div className="mt-4 flex gap-2">
+                            <button onClick={createAllocation} className="bg-emerald-600 text-white px-4 py-2 rounded-xl">Submit</button>
+                            <button onClick={() => setShowForm(false)} className="border px-4 py-2 rounded-xl">Cancel</button>
+                        </div>
+                    </div>
+                )}
+                <div className="overflow-x-auto rounded-xl border">
+                    <table className="min-w-full bg-white">
+                        <thead className="bg-slate-100"><tr><th className="p-3">Partner ID</th><th>Amount</th><th>Description</th><th>Date</th><th>Actions</th></tr></thead>
+                        <tbody>
+                            {items.map(a => <tr key={a.id} className="border-t"><td className="p-3">{a.partnerId}</td><td>{a.amount}</td><td>{a.description}</td><td>{a.date || '-'}</td><td><button onClick={async () => { const res = await deleteItem(a.id); if (res.success) toast?.show('Deleted', 'success'); else toast?.show(`Delete failed: ${res.error}`, 'error'); }} className="text-rose-500"><i className="fas fa-trash"></i></button></td></tr>)}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        );
+    };
+
+    // ---------- Logs Viewer (with search) ----------
+    const LogViewer = () => {
+        const [logs, setLogs] = React.useState([]);
+        const [search, setSearch] = React.useState('');
+        React.useEffect(() => { axios.get('/logs').then(res => setLogs(res.data)).catch(() => {}); }, []);
+        const filtered = logs.filter(log => JSON.stringify(log).toLowerCase().includes(search.toLowerCase()));
+        return (
+            <div>
+                <div className="flex justify-between items-center mb-4 flex-wrap gap-3">
+                    <h2 className="text-2xl font-bold">System Logs</h2>
+                    <div className="relative"><i className="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i><input type="text" placeholder="Filter logs..." value={search} onChange={e=>setSearch(e.target.value)} className="pl-10 pr-4 py-2 border rounded-xl w-64" /></div>
+                </div>
+                <div className="bg-slate-900 text-green-300 p-4 rounded-xl h-96 overflow-y-auto font-mono text-sm">
+                    {filtered.map(log => <div key={log.id} className="border-b border-slate-700 py-1">[{log.timestamp}] {log.action || log.message || JSON.stringify(log)}</div>)}
+                    {filtered.length === 0 && <div className="text-slate-500">No logs match</div>}
+                </div>
+            </div>
+        );
+    };
+
+    // ---------- Event Registrations Manager ----------
+    const EventRegistrationManager = () => {
+        const { items, loading, createItem, deleteItem, searchTerm, setSearchTerm, refetch } = useCrud('eventRegistrations');
+        const [showForm, setShowForm] = React.useState(false);
+        const [form, setForm] = React.useState({ eventId: '', attendeeName: '', email: '' });
+        const toast = useToast();
+
+        const createRegistration = async () => {
+            const result = await createItem(form);
+            if (result.success) { setShowForm(false); setForm({ eventId: '', attendeeName: '', email: '' }); toast?.show('Registered', 'success'); }
+            else toast?.show(`Error: ${result.error}`, 'error');
+        };
+        const markAttended = async (id) => {
+            try { await axios.patch(`/eventRegistrations/${id}/attend`); await refetch(); toast?.show('Attendance marked', 'success'); } 
+            catch (err) { toast?.show(`Failed: ${err.response?.data?.error || err.message}`, 'error'); }
+        };
+
+        if (loading) return <div>Loading registrations...</div>;
+        return (
+            <div>
+                <div className="flex flex-wrap justify-between mb-6 gap-4">
+                    <h2 className="text-2xl font-bold">Event Registrations</h2>
+                    <div className="flex gap-3"><div className="relative"><i className="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i><input type="text" placeholder="Search..." value={searchTerm} onChange={e=>setSearchTerm(e.target.value)} className="pl-10 pr-4 py-2 border rounded-xl w-64" /></div><button onClick={()=>setShowForm(true)} className="bg-indigo-600 text-white px-4 py-2 rounded-xl">+ Register</button></div>
+                </div>
+                {showForm && (<div className="bg-slate-50 p-5 rounded-xl mb-6"><div className="grid md:grid-cols-3 gap-4"><input placeholder="Event ID" value={form.eventId} onChange={e=>setForm({...form,eventId:e.target.value})} className="border p-2 rounded-xl"/><input placeholder="Attendee Name" value={form.attendeeName} onChange={e=>setForm({...form,attendeeName:e.target.value})} className="border p-2 rounded-xl"/><input placeholder="Email" value={form.email} onChange={e=>setForm({...form,email:e.target.value})} className="border p-2 rounded-xl"/></div><div className="mt-4 flex gap-2"><button onClick={createRegistration} className="bg-emerald-600 text-white px-4 py-2 rounded-xl">Save</button><button onClick={()=>setShowForm(false)} className="border px-4 py-2 rounded-xl">Cancel</button></div></div>)}
+                <div className="overflow-x-auto rounded-xl border"><table className="min-w-full bg-white"><thead className="bg-slate-100"><tr><th className="p-3">Event ID</th><th>Attendee</th><th>Email</th><th>Attendance</th><th>Actions</th></tr></thead><tbody>{items.map(r => <tr key={r.id} className="border-t"><td className="p-3">{r.eventId}</td><td>{r.attendeeName}</td><td>{r.email}</td><td>{r.attendance || 'Pending'}</td><td>{!r.attendance && <button onClick={()=>markAttended(r.id)} className="bg-green-100 text-green-700 px-2 py-1 rounded text-sm mr-2">Mark</button>}<button onClick={async () => { const res = await deleteItem(r.id); if (res.success) toast?.show('Deleted', 'success'); else toast?.show(`Delete failed: ${res.error}`, 'error'); }} className="text-rose-500"><i className="fas fa-trash"></i></button></td></tr>)}</tbody></table></div>
+            </div>
+        );
+    };
+
+    // ---------- Program Enrollments Manager ----------
+    const ProgramEnrollmentManager = () => {
+        const { items, loading, createItem, deleteItem, searchTerm, setSearchTerm, refetch } = useCrud('programEnrollments');
+        const [showForm, setShowForm] = React.useState(false);
+        const [form, setForm] = React.useState({ programId: '', participantName: '', email: '' });
+        const toast = useToast();
+
+        const createEnrollment = async () => {
+            const result = await createItem(form);
+            if (result.success) { setShowForm(false); setForm({ programId: '', participantName: '', email: '' }); toast?.show('Enrolled', 'success'); }
+            else toast?.show(`Error: ${result.error}`, 'error');
+        };
+        const markComplete = async (id) => {
+            try { await axios.patch(`/programEnrollments/${id}/complete`); await refetch(); toast?.show('Completed', 'success'); } 
+            catch (err) { toast?.show(`Failed: ${err.response?.data?.error || err.message}`, 'error'); }
+        };
+
+        if (loading) return <div>Loading enrollments...</div>;
+        return (
+            <div>
+                <div className="flex flex-wrap justify-between mb-6 gap-4">
+                    <h2 className="text-2xl font-bold">Program Enrollments</h2>
+                    <div className="flex gap-3"><div className="relative"><i className="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i><input type="text" placeholder="Search..." value={searchTerm} onChange={e=>setSearchTerm(e.target.value)} className="pl-10 pr-4 py-2 border rounded-xl w-64" /></div><button onClick={()=>setShowForm(true)} className="bg-indigo-600 text-white px-4 py-2 rounded-xl">+ Enroll</button></div>
+                </div>
+                {showForm && (<div className="bg-slate-50 p-5 rounded-xl mb-6"><div className="grid md:grid-cols-3 gap-4"><input placeholder="Program ID" value={form.programId} onChange={e=>setForm({...form,programId:e.target.value})} className="border p-2 rounded-xl"/><input placeholder="Participant Name" value={form.participantName} onChange={e=>setForm({...form,participantName:e.target.value})} className="border p-2 rounded-xl"/><input placeholder="Email" value={form.email} onChange={e=>setForm({...form,email:e.target.value})} className="border p-2 rounded-xl"/></div><div className="mt-4 flex gap-2"><button onClick={createEnrollment} className="bg-emerald-600 text-white px-4 py-2 rounded-xl">Save</button><button onClick={()=>setShowForm(false)} className="border px-4 py-2 rounded-xl">Cancel</button></div></div>)}
+                <div className="overflow-x-auto rounded-xl border"><table className="min-w-full bg-white"><thead className="bg-slate-100"><tr><th className="p-3">Program ID</th><th>Participant</th><th>Completed</th><th>Actions</th></tr></thead><tbody>{items.map(e => <tr key={e.id} className="border-t"><td className="p-3">{e.programId}</td><td>{e.participantName}</td><td>{e.completed ? '✅ Completed' : '❌ In Progress'}</td><td>{!e.completed && <button onClick={()=>markComplete(e.id)} className="bg-indigo-100 text-indigo-700 px-2 py-1 rounded text-sm mr-2">Complete</button>}<button onClick={async () => { const res = await deleteItem(e.id); if (res.success) toast?.show('Deleted', 'success'); else toast?.show(`Delete failed: ${res.error}`, 'error'); }} className="text-rose-500"><i className="fas fa-trash"></i></button></td></tr>)}</tbody></table></div>
+            </div>
+        );
+    };
+
+    // ---------- Applications Manager (expert, corporate, membership) ----------
+    const ApplicationManager = ({ type }) => {
+        const baseEndpoint = `applications/${type}`;
+        const { items, loading, createItem, deleteItem, searchTerm, setSearchTerm, refetch } = useCrud(baseEndpoint);
+        const [modalOpen, setModalOpen] = React.useState(false);
+        const [editing, setEditing] = React.useState(null);
+        const [form, setForm] = React.useState({ name: '', email: '', organization: '', status: 'pending' });
+        const toast = useToast();
+
+        const updateApp = async (id, data) => {
+            try { await axios.patch(`/${baseEndpoint}/${id}`, data); await refetch(); toast?.show('Updated', 'success'); return true; } 
+            catch(e) { toast?.show(`Update failed: ${e.response?.data?.error || e.message}`, 'error'); return false; }
+        };
+        const createApp = async (data) => {
+            const result = await createItem(data);
+            if (result.success) toast?.show('Created', 'success');
+            else toast?.show(`Create failed: ${result.error}`, 'error');
+            return result.success;
+        };
+        const openCreate = () => { setEditing(null); setForm({ name: '', email: '', organization: '', status: 'pending' }); setModalOpen(true); };
+        const openEdit = (app) => { setEditing(app); setForm({ name: app.name, email: app.email, organization: app.organization || '', status: app.status }); setModalOpen(true); };
+        const handleSubmit = async () => {
+            let success;
+            if (editing) success = await updateApp(editing.id, form);
+            else success = await createApp(form);
+            if (success) setModalOpen(false);
+        };
+
+        if (loading) return <div>Loading applications...</div>;
+        return (
+            <div>
+                <div className="flex flex-wrap justify-between mb-6 gap-4">
+                    <h2 className="text-2xl font-bold capitalize">{type} Applications</h2>
+                    <div className="flex gap-3"><div className="relative"><i className="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i><input type="text" placeholder="Search..." value={searchTerm} onChange={e=>setSearchTerm(e.target.value)} className="pl-10 pr-4 py-2 border rounded-xl w-64" /></div><button onClick={openCreate} className="bg-indigo-600 text-white px-4 py-2 rounded-xl">+ New</button></div>
+                </div>
+                <div className="overflow-x-auto rounded-xl border"><table className="min-w-full bg-white"><thead className="bg-slate-100"><tr><th className="p-3">Name</th><th>Email</th><th>Organization</th><th>Status</th><th>Actions</th></tr></thead><tbody>{items.map(app => (<tr key={app.id} className="border-t"><td className="p-3">{app.name}</td><td>{app.email}</td><td>{app.organization}</td><td><span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${app.status === 'approved' ? 'bg-green-100 text-green-700' : app.status === 'rejected' ? 'bg-rose-100 text-rose-700' : 'bg-yellow-100 text-yellow-700'}`}>{app.status}</span></td><td><button onClick={() => openEdit(app)} className="text-indigo-600 mr-2"><i className="fas fa-edit"></i></button><button onClick={() => updateApp(app.id, { status: 'approved' })} className="text-green-600 text-xs bg-green-50 px-2 py-1 rounded mr-1">Approve</button><button onClick={() => updateApp(app.id, { status: 'rejected' })} className="text-rose-600 text-xs bg-rose-50 px-2 py-1 rounded">Reject</button><button onClick={async () => { const res = await deleteItem(app.id); if (res.success) toast?.show('Deleted', 'success'); else toast?.show(`Delete failed: ${res.error}`, 'error'); }} className="text-rose-500 ml-2"><i className="fas fa-trash"></i></button></td></tr>))}</tbody></table></div>
+                <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={editing ? "Edit Application" : "New Application"}><div className="space-y-3"><input placeholder="Name" value={form.name} onChange={e=>setForm({...form,name:e.target.value})} className="w-full border p-2 rounded"/><input placeholder="Email" value={form.email} onChange={e=>setForm({...form,email:e.target.value})} className="w-full border p-2 rounded"/><input placeholder="Organization" value={form.organization} onChange={e=>setForm({...form,organization:e.target.value})} className="w-full border p-2 rounded"/><select value={form.status} onChange={e=>setForm({...form,status:e.target.value})} className="w-full border p-2 rounded"><option value="pending">Pending</option><option value="approved">Approved</option><option value="rejected">Rejected</option></select><button onClick={handleSubmit} className="bg-indigo-600 text-white w-full py-2 rounded">Save</button></div></Modal>
+            </div>
+        );
+    };
+
+    // ---------- Bulk Import (enhanced) ----------
+    const BulkImport = () => {
+        const [jsonData, setJsonData] = React.useState('');
+        const [importing, setImporting] = React.useState(false);
+        const toast = useToast();
+        const handleImport = async () => {
+            try {
+                const parsed = JSON.parse(jsonData);
+                setImporting(true);
+                await axios.post('/import', parsed);
+                toast?.show('Import successful', 'success');
+                setJsonData('');
+            } catch(e) { toast?.show('Invalid JSON or import error', 'error'); } finally { setImporting(false); }
+        };
+        return (
+            <div>
+                <h2 className="text-2xl font-bold mb-3">Bulk Import Data</h2>
+                <p className="text-sm text-slate-500 mb-2">Upload a JSON object with any of these collections: experts, events, activities, programs, partners, allocations, systemLogs, eventRegistrations, programEnrollments, expertApplications, corporateApplications, membershipApplications, goals, kpis, projects.</p>
+                <textarea rows="10" value={jsonData} onChange={e=>setJsonData(e.target.value)} placeholder='{"experts": [{"name":"John","expertise":"Tech","email":"john@example.com"}], "events": []}' className="w-full border rounded-xl p-3 font-mono text-sm"></textarea>
+                <button onClick={handleImport} disabled={importing} className="mt-4 bg-indigo-700 text-white px-6 py-2 rounded-xl shadow">{importing ? 'Importing...' : 'Execute Import'}</button>
+            </div>
+        );
+    };
+
+    // ---------- Login Screen ----------
+    const LoginScreen = ({ onLogin }) => {
+        const [password, setPassword] = React.useState('');
+        const [loading, setLoading] = React.useState(false);
+        const handleSubmit = async (e) => {
+            e.preventDefault(); setLoading(true);
+            try { const res = await axios.post('/login', { password }); localStorage.setItem('admin_token', res.data.token); onLogin(res.data.token); } 
+            catch (err) { alert(err.response?.data?.error || 'Invalid password'); } finally { setLoading(false); }
+        };
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-slate-100 flex items-center justify-center p-5">
+                <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-8">
+                    <div className="text-center mb-8"><div className="bg-indigo-600 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto"><i className="fas fa-shield-alt text-white text-3xl"></i></div><h2 className="text-2xl font-bold mt-4">Foundation Admin</h2><p className="text-slate-500">Enter secure password</p></div>
+                    <form onSubmit={handleSubmit}><input type="password" value={password} onChange={e=>setPassword(e.target.value)} className="w-full border rounded-xl p-3 mb-4" placeholder="Password" autoFocus required /><button type="submit" disabled={loading} className="w-full bg-indigo-600 text-white py-3 rounded-xl">{loading ? 'Verifying...' : 'Access Dashboard'}</button></form>
+                    <p className="text-xs text-center text-slate-400 mt-6">Demo password: <span className="font-mono bg-slate-100 px-2 py-0.5 rounded">tim2024</span></p>
+                    <div className="mt-4 p-2 bg-yellow-50 text-yellow-800 rounded text-xs text-center">⚠️ Backend note: updates/deletes require removing `parseInt` from routes to work.</div>
+                </div>
+            </div>
+        );
+    };
+
+    // ---------- Main App ----------
+    const App = () => {
+        const [isAuthenticated, setIsAuthenticated] = React.useState(false);
+        const [toastMsg, setToastMsg] = React.useState(null);
+        const toastValue = React.useMemo(() => ({ show: (msg, type) => { setToastMsg({ msg, type }); setTimeout(() => setToastMsg(null), 3000); } }), []);
+        React.useEffect(() => { if (localStorage.getItem('admin_token')) setIsAuthenticated(true); }, []);
+        const handleLogin = () => setIsAuthenticated(true);
+        const handleLogout = () => { localStorage.removeItem('admin_token'); setIsAuthenticated(false); };
+        if (!isAuthenticated) return <LoginScreen onLogin={handleLogin} />;
+        return (<ToastContext.Provider value={toastValue}><Dashboard onLogout={handleLogout} toastMsg={toastMsg} /></ToastContext.Provider>);
+    };
+
+    const Dashboard = React.memo(({ onLogout, toastMsg }) => {
+        const [activeTab, setActiveTab] = React.useState('Experts');
+        const [appSubType, setAppSubType] = React.useState('expert');
+        const tabs = ['Experts', 'Events', 'Activities', 'Programs', 'Partners', 'Goals', 'KPIs', 'Projects', 'Allocations', 'Logs', 'EventRegistrations', 'ProgramEnrollments', 'Applications', 'Import'];
+
+        const renderContent = () => {
+            switch(activeTab) {
+                case 'Experts': return <ExpertManager />;
+                case 'Events': return <EventManager />;
+                case 'Activities': return <ActivityManager />;
+                case 'Programs': return <ProgramManager />;
+                case 'Partners': return <PartnerManager />;
+                case 'Goals': return <GoalManager />;
+                case 'KPIs': return <KPIManager />;
+                case 'Projects': return <ProjectManager />;
+                case 'Allocations': return <AllocationManager />;
+                case 'Logs': return <LogViewer />;
+                case 'EventRegistrations': return <EventRegistrationManager />;
+                case 'ProgramEnrollments': return <ProgramEnrollmentManager />;
+                case 'Applications': return (<div><div className="flex gap-3 mb-6 border-b pb-2">{['expert','corporate','membership'].map(t => (<button key={t} onClick={()=>setAppSubType(t)} className={`px-5 py-2 rounded-full font-medium ${appSubType===t ? 'bg-indigo-600 text-white' : 'bg-white border'}`}>{t.charAt(0).toUpperCase()+t.slice(1)}</button>))}</div><ApplicationManager type={appSubType} /></div>);
+                case 'Import': return <BulkImport />;
+                default: return <ExpertManager />;
+            }
+        };
+
+        return (
+            <div className="min-h-screen bg-slate-50">
+                <div className="bg-white shadow-sm border-b sticky top-0 z-40">
+                    <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+                        <div className="flex items-center gap-3"><div className="bg-indigo-600 p-2 rounded-xl"><i className="fas fa-hand-holding-heart text-white text-xl"></i></div><h1 className="text-xl font-bold">Foundation Hub Admin</h1></div>
+                        <button onClick={onLogout} className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-slate-100"><i className="fas fa-sign-out-alt"></i> Logout</button>
+                    </div>
+                </div>
+                <div className="max-w-7xl mx-auto px-4 py-6">
+                    {toastMsg && <div className={`fixed top-20 right-6 z-50 px-5 py-3 rounded-xl shadow-lg flex items-center gap-3 ${toastMsg.type==='success'?'bg-emerald-600 text-white':'bg-rose-600 text-white'}`}><i className={`fas ${toastMsg.type==='success'?'fa-check-circle':'fa-exclamation-triangle'}`}></i><span>{toastMsg.msg}</span></div>}
+                    <div className="flex flex-wrap gap-2 sticky top-16 bg-slate-50/90 backdrop-blur-sm py-3 z-30 overflow-x-auto border-b">
+                        {tabs.map(tab => <button key={tab} onClick={()=>setActiveTab(tab)} className={`px-5 py-2.5 rounded-xl font-medium transition-all ${activeTab===tab ? 'bg-indigo-600 text-white shadow-md' : 'bg-white text-slate-600 hover:bg-indigo-50 border'}`}>{tab}</button>)}
+                    </div>
+                    <div className="mt-6 bg-white rounded-2xl shadow-sm border p-6">{renderContent()}</div>
+                </div>
+            </div>
+        );
+    });
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
